@@ -5,6 +5,26 @@ import json
 import slackapp as sa
 import vectorizer
 
+
+# userごとの投稿メッセージ列から不要な文字列を削除する
+# * 除外対象のメッセージ *
+#  - チャンネル参加時のメッセージ「XXXさんがチャンネルに参加しました」は列ごと消去
+#  - URLが含まれる場合は、URLのみ消去
+def cleansing_msgs(msgs_by_user):
+    ret_tbl = {}
+    for uname, umsgs in msgs_by_user.items():
+        ret_umsgs = []
+        for umsg in umsgs:
+            # ignore "join channel" msg
+            if 'さんがチャンネルに参加しました' in umsg:
+                continue
+            # # exclude URL
+            # else 'http' in umsg:
+            ret_umsgs.append(umsg)
+        ret_tbl[uname] = umsgs
+    return ret_tbl
+
+
 # api token 読み込み
 print('load credential.json ...')
 with open('credential.json', 'r') as f:
@@ -45,6 +65,15 @@ if app.request_usrinfo() is False:
     print('failed to get user info')
     sys.exit(1)
 
+# users情報を出力する
+userinfo = app.get_usrinfo()
+sr_user_id = pd.Series(list(userinfo.keys()))
+sr_user_name = pd.Series(list(userinfo.values()))
+df_userinfo = pd.concat(
+    [sr_user_id, sr_user_name], axis=1)
+df_userinfo = df_userinfo.rename(columns={0: 'usr_id', 1: 'usr_name'})
+df_userinfo.to_csv('userinfo.csv', index=False)
+
 # 各チャンネルの情報をまとめたデータフレーム列作成
 # カラム：user_name, text, timestamp
 mic_val_dfs = []
@@ -77,7 +106,8 @@ with open(collect_msg_fpath, 'w', encoding='utf-8') as f:
 # -----------------------------------------------------
 # メッセージ文字列から不要な文字列を除外（データクレンジング）
 # -----------------------------------------------------
-# 未実装
+print('cleansing data ...')
+msgs_by_usr = cleansing_msgs(msgs_by_usr)
 
 # vectorizerオブジェクト生成
 X_by_users = []
@@ -88,13 +118,7 @@ analyzer = vectorizer.vectorizer()
 for uname, umsgs in msgs_by_usr.items():
     s = ''
     # 当該ユーザーの投稿を１Lineにまとめる
-    for msg in umsgs:
-        # チャンネル参加時の文字列を除去
-        if 'さんがチャンネルに参加しました' in msg:
-            continue
-        s += msg
-    if s == '':
-        continue
+    s = ''.join(umsgs)
     analyzer.vectorize_line(s)
     print('user : ' + str(uname) + '=============')
     print(analyzer.features)

@@ -38,6 +38,9 @@ class slackapp:
                     self.userInfo[m['id']] = m['name']
                 return True
         return False
+    
+    def get_usrinfo(self):
+        return self.userInfo
 
     def request_chinfo(self):
         # channels.listを取得してchannelInfoに格納
