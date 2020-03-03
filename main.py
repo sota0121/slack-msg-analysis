@@ -2,6 +2,7 @@
 import sys
 import pandas as pd
 import json
+import re
 import slackapp as sa
 import vectorizer
 from tqdm import tqdm
@@ -12,6 +13,7 @@ from tqdm import tqdm
 #  - チャンネル参加時のメッセージ「XXXさんがチャンネルに参加しました」は列ごと消去
 #  - URLが含まれる場合は、URLのみ消去
 def cleansing_msgs(msgs_by_user):
+    pattern_url = re.compile(r'\<.*?\>')
     ret_tbl = {}
     for uname, umsgs in msgs_by_user.items():
         ret_umsgs = []
@@ -19,10 +21,10 @@ def cleansing_msgs(msgs_by_user):
             # ignore "join channel" msg
             if 'さんがチャンネルに参加しました' in umsg:
                 continue
-            # # exclude URL
-            # else 'http' in umsg:
+            # exclude url string
+            umsg = pattern_url.sub('', umsg)
             ret_umsgs.append(umsg)
-        ret_tbl[uname] = umsgs
+        ret_tbl[uname] = ret_umsgs
     return ret_tbl
 
 
@@ -98,17 +100,17 @@ for df in mic_val_dfs:
         umsg = umsg.replace('\n', '')
         msgs_by_usr[uname].append(umsg)
 
-# userごとの投稿内容をJSON形式で保存
-collect_msg_fpath = 'collect_msgs.json'
-print('save file {0} ...'.format(collect_msg_fpath))
-with open(collect_msg_fpath, 'w', encoding='utf-8') as f:
-    json.dump(msgs_by_usr, f, indent=2, ensure_ascii=False)
-
 # -----------------------------------------------------
 # メッセージ文字列から不要な文字列を除外（データクレンジング）
 # -----------------------------------------------------
 print('cleansing data ...')
 msgs_by_usr = cleansing_msgs(msgs_by_usr)
+
+# userごとの投稿内容をJSON形式で保存
+collect_msg_fpath = 'collect_msgs.json'
+print('save file {0} ...'.format(collect_msg_fpath))
+with open(collect_msg_fpath, 'w', encoding='utf-8') as f:
+    json.dump(msgs_by_usr, f, indent=2, ensure_ascii=False)
 
 # vectorizerオブジェクト生成
 X_by_users = []
