@@ -4,6 +4,7 @@ import pandas as pd
 import json
 import slackapp as sa
 import vectorizer
+from tqdm import tqdm
 
 
 # userごとの投稿メッセージ列から不要な文字列を削除する
@@ -114,18 +115,25 @@ X_by_users = []
 feature_by_users = []
 analyzer = vectorizer.vectorizer()
 
-# userごとの投稿内容をベクトル化
+# userごとの投稿内容をベクトル化して保存
+print('save countvectorized data (this has not been implemented  yet) ...')
 for uname, umsgs in msgs_by_usr.items():
     s = ''
     # 当該ユーザーの投稿を１Lineにまとめる
     s = ''.join(umsgs)
     analyzer.vectorize_line(s)
     print('user : ' + str(uname) + '=============')
-    print(analyzer.features)
     feature_by_users.append(analyzer.features)
-    print(analyzer.X)
     X_by_users.append(analyzer.X)
+    # save func have not been implemented yet.
 
-# userごとの投稿内容テーブルを作成
-
-    
+# userごとの投稿内容の頻度データを保存
+print('save frequency of words by users(名詞を対象) ...')
+freq_info_dict = {}
+for uname, umsgs in tqdm(msgs_by_usr.items(), desc="[analyze freq]"):
+    # 当該ユーザーの投稿を１Lineにまとめる
+    s = ''.join(umsgs)
+    freq = analyzer.frequency_info(s, part_of_speech='名詞')
+    freq_info_dict[uname] = freq
+with open('frequency_of_words.json', 'w', encoding='utf-8') as fw:
+    json.dump(freq_info_dict, fw, indent=4, ensure_ascii=False)
