@@ -37,7 +37,7 @@ def main():
     if p.exists() == False:
         p.mkdir()
     t = Tokenizer()  # tokenizer のイニシャライズは一回に留める
-    stop_words = ['さん', 'お願い', 'そう']  # 都度追加
+    stop_words = ['さん', 'お願い', 'そう', '参加']  # 都度追加
     print('stop words are : {0} ...'.format(stop_words))
     # generate
     user_num = len(msgs_by_usr.keys())
