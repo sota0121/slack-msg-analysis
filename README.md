@@ -29,6 +29,9 @@
 3. メインスクリプトの実行
    1. 仮想環境に入る
    2. `python main.py`
+4. wordcloudの生成（collect_msgs.jsonがあれば良い）
+   1. 仮想環境に入る
+   2. `python wc_from_collectmsgs.py`
 
 ### 出力されるファイル
 
@@ -46,6 +49,9 @@
   - 投稿メッセージの語単位の頻度データをユーザーごとにまとめたもの
   - 「3. メインスクリプトの実行」にて生成
   - ※今は固定で名詞のみを処理対象としています
+- <font color=blue>**wordcloud_img/[user_id].png**</font>
+  - ユーザーごとにwordcloudを生成し、画像ファイルとして保存したもの
+  - 「4. wordcloudの生成」にて生成
 
 ## 各スクリプトの役割
 
@@ -54,7 +60,10 @@
 - メインのスクリプト
 - slackからの情報抽出
 - 情報の整形、変換
-- Bigqueryへの取り込み
+  - 除去文字列
+    - 「●●に参加しました」というチャンネル参加時のメッセージ
+    - URL
+- Bigqueryへの取り込み(未実装)
 
 ### slackapp.py
 
@@ -71,3 +80,10 @@
 - main.pyにてターゲットにするチャンネルを "chlist_to_get.csv" から読み取るようにしているが
 - そのCSVファイル作成のサポートをする
 - 使い方は `python list_channel_info.py > chlist_to_get.csv`
+
+### wc_from_collectmsgs.py
+
+- collect_msgs.jsonを読み込む
+- ユーザーごとの投稿メッセージからwordcloudを生成
+  - ※stop_wordsはまだ調整中です
+- wordcloud_img/ユーザーID.png として画像保存
