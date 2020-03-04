@@ -8,14 +8,20 @@ from janome.tokenizer import Tokenizer
 
 
 # テキストの集合をベクトル化する
-class vectorizer:
+class VectorizerWrapper:
     def __init__(self):
         self.features = []
         self.X = 0
         self.lines = []
         self.tokenizer = Tokenizer()  # Tokenizerオブジェクトの生成コストは高いので一度だけ
 
-    def vectorize_line(self, text):
+    def do_wakati(self, text_doc):
+        # 文章を分かち書きにする
+        words = self.tokenizer.tokenize(text_doc, wakati=True)
+        wakati_string = ' '.join(words)
+        return wakati_string
+
+    def countvectorize_line(self, text):
         # 分かち書き
         corpus = []
         words = self.tokenizer.tokenize(text, wakati=True)
@@ -24,6 +30,9 @@ class vectorizer:
         executer = CountVectorizer()
         self.X = executer.fit_transform(corpus)
         self.features = executer.get_feature_names()
+    
+    def tfidfvectorize_line(self, text):
+        pass
 
     def morphological_info(self, text):
         wgen = self.tokenizer.tokenize(text, stream=True)

@@ -115,7 +115,7 @@ with open(collect_msg_fpath, 'w', encoding='utf-8') as f:
 # vectorizerオブジェクト生成
 X_by_users = []
 feature_by_users = []
-analyzer = vectorizer.vectorizer()
+analyzer = vectorizer.VectorizerWrapper()
 
 # userごとの投稿内容をベクトル化して保存
 print('save countvectorized data (this has not been implemented  yet) ...')
@@ -123,7 +123,7 @@ for uname, umsgs in msgs_by_usr.items():
     s = ''
     # 当該ユーザーの投稿を１Lineにまとめる
     s = ''.join(umsgs)
-    analyzer.vectorize_line(s)
+    analyzer.countvectorize_line(s)
     print('user : ' + str(uname) + '=============')
     feature_by_users.append(analyzer.features)
     X_by_users.append(analyzer.X)
