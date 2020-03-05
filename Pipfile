@@ -22,6 +22,8 @@ sklearn = "==0.0"
 urllib3 = "==1.25.7"
 Janome = "==0.3.10"
 flake8 = "*"
+tqdm = "==4.42.1"
+wordcloud = "==1.6.0"
 
 [requires]
 python_version = "3.7"

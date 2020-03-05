@@ -2,8 +2,10 @@
 import sys
 import pandas as pd
 import json
+import re
 import slackapp as sa
 import vectorizer
+from tqdm import tqdm
 
 
 # userごとの投稿メッセージ列から不要な文字列を削除する
@@ -11,6 +13,7 @@ import vectorizer
 #  - チャンネル参加時のメッセージ「XXXさんがチャンネルに参加しました」は列ごと消去
 #  - URLが含まれる場合は、URLのみ消去
 def cleansing_msgs(msgs_by_user):
+    pattern_url = re.compile(r'\<.*?\>')
     ret_tbl = {}
     for uname, umsgs in msgs_by_user.items():
         ret_umsgs = []
@@ -18,10 +21,10 @@ def cleansing_msgs(msgs_by_user):
             # ignore "join channel" msg
             if 'さんがチャンネルに参加しました' in umsg:
                 continue
-            # # exclude URL
-            # else 'http' in umsg:
+            # exclude url string
+            umsg = pattern_url.sub('', umsg)
             ret_umsgs.append(umsg)
-        ret_tbl[uname] = umsgs
+        ret_tbl[uname] = ret_umsgs
     return ret_tbl
 
 
@@ -97,35 +100,42 @@ for df in mic_val_dfs:
         umsg = umsg.replace('\n', '')
         msgs_by_usr[uname].append(umsg)
 
-# userごとの投稿内容をJSON形式で保存
-collect_msg_fpath = 'collect_msgs.json'
-print('save file {0} ...'.format(collect_msg_fpath))
-with open(collect_msg_fpath, 'w', encoding='utf-8') as f:
-    json.dump(msgs_by_usr, f, indent=2, ensure_ascii=False)
-
 # -----------------------------------------------------
 # メッセージ文字列から不要な文字列を除外（データクレンジング）
 # -----------------------------------------------------
 print('cleansing data ...')
 msgs_by_usr = cleansing_msgs(msgs_by_usr)
 
+# userごとの投稿内容をJSON形式で保存
+collect_msg_fpath = 'collect_msgs.json'
+print('save file {0} ...'.format(collect_msg_fpath))
+with open(collect_msg_fpath, 'w', encoding='utf-8') as f:
+    json.dump(msgs_by_usr, f, indent=2, ensure_ascii=False)
+
 # vectorizerオブジェクト生成
 X_by_users = []
 feature_by_users = []
-analyzer = vectorizer.vectorizer()
+analyzer = vectorizer.VectorizerWrapper()
 
-# userごとの投稿内容をベクトル化
+# userごとの投稿内容をベクトル化して保存
+print('save countvectorized data (this has not been implemented  yet) ...')
 for uname, umsgs in msgs_by_usr.items():
     s = ''
     # 当該ユーザーの投稿を１Lineにまとめる
     s = ''.join(umsgs)
-    analyzer.vectorize_line(s)
+    analyzer.countvectorize_line(s)
     print('user : ' + str(uname) + '=============')
-    print(analyzer.features)
     feature_by_users.append(analyzer.features)
-    print(analyzer.X)
     X_by_users.append(analyzer.X)
+    # save func have not been implemented yet.
 
-# userごとの投稿内容テーブルを作成
-
-    
+# userごとの投稿内容の頻度データを保存
+print('save frequency of words by users(名詞を対象) ...')
+freq_info_dict = {}
+for uname, umsgs in tqdm(msgs_by_usr.items(), desc="[analyze freq]"):
+    # 当該ユーザーの投稿を１Lineにまとめる
+    s = ''.join(umsgs)
+    freq = analyzer.frequency_info(s, part_of_speech='名詞')
+    freq_info_dict[uname] = freq
+with open('frequency_of_words.json', 'w', encoding='utf-8') as fw:
+    json.dump(freq_info_dict, fw, indent=4, ensure_ascii=False)
