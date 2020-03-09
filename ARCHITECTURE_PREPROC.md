@@ -6,21 +6,24 @@
 
 ## 構成モジュール
 
-1. <font color=blue>Cleaning</font> : **Text Processing**
+1. <font color=blue>SlackMsgExtraction</font> : **Slack App**
+   1. Slackのメッセージ群の抽出処理を担当するモジュール
+   2. Slackからメッセージ、チャンネル情報、ユーザー情報などを抽出する
+2. <font color=blue>Cleaning</font> : **Text Processing**
    1. クリーニング処理を担当するモジュール
    2. テキスト中のノイズ(htmlタグとか)を除去する
-2. <font color=blue>MorphologicalAnalysis(Tokenization + Part-of-speech tagging)</font> : **Text Processing**
+3. <font color=blue>MorphologicalAnalysis(Tokenization + Part-of-speech tagging)</font> : **Text Processing**
    1. 文字列の形態素解析処理を担当するモジュール
    2. 形態素解析、指定したタグの文字列のみ抽出、分かち書きなどのメソッドを提供する
-3. <font color=blue>Normalization</font> : **Text Processing**
+4. <font color=blue>Normalization</font> : **Text Processing**
    1. 単語の正規化処理を担当するモジュール
    2. 文字種の統一や大文字小文字変換などを行う
-4. <font color=blue>StopWordRemoval</font> : **Text Processing**
+5. <font color=blue>StopWordRemoval</font> : **Text Processing**
    1. ストップワード除去処理を担当するモジュール
-5. <font color=blue>ImportantWordExtraction</font> : **Feature Extraction**
+6. <font color=blue>ImportantWordExtraction</font> : **Feature Extraction**
    1. 重要単語の抽出処理を担当するモジュール
    2. tf-idf算出を用いる
-6. <font color=blue>WordVectorization</font> : **Feature Extraction**
+7. <font color=blue>WordVectorization</font> : **Feature Extraction**
    1. 文字列のベクトル化処理を担当するモジュール
    2. word2vecを用いる
    3. 文字列情報をベクトル表現に置き換えて、有用な情報の抽出及びそのサポートを行う
