@@ -60,27 +60,29 @@
 
 ## 処理の流れと各ディレクトリへの格納先の関連
 
-1. Slackチャンネル情報（メッセージ含む）の取得
+1. SlackAPIを用いたSlack情報取得ツール
+   1. script: `src/d000_utils`
+2. Slackチャンネル情報（メッセージ含む）の取得
    1. output: `data/010_raw/`
    2. script: `src/d010_data/`
-2. Slackユーザー情報の取得
+3. Slackユーザー情報の取得
    1. output: `data/010_raw/`
    2. script: `src/d010_data/`
-3. クリーニング処理
+4. クリーニング処理
    1. output: `data/020_intermediate/`
    2. script: `src/d020_intermediate/`
-4. 文章の単語分割処理
+5. 文章の単語分割処理
    1. output: `data/030_processed/`
    2. script: `src/d030_processed/`
-5. 単語の正規化処理
+6. 単語の正規化処理
    1. output: `data/030_processed/`
    2. script: `src/d030_processed/`
-6. ストップワードの除去処理
+7. ストップワードの除去処理
    1. output: `data/030_processed/`
    2. script: `src/d030_processed/`
-7. 特徴抽出ー重要単語判定
+8. 特徴抽出ー重要単語判定
    1. output: `data/031_features/`
    2. script: `src/d031_features/`
-8. 特徴抽出ー単語の分散表現
+9. 特徴抽出ー単語の分散表現
    1. output: `data/031_features/`
    2. script: `src/d031_features/`
