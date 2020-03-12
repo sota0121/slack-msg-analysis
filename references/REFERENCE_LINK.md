@@ -1,0 +1,36 @@
+# Reference Sites Links
+
+## About Development of Python Project
+
+- [データサイエンスプロジェクトのディレクトリ構成どうするか問題](https://takuti.me/note/data-science-project-structure/)
+- [drivendata/cookiecutter-data-science | github](https://github.com/drivendata/cookiecutter-data-science/)
+- [dssg/hitchhikers-guide | github](https://github.com/dssg/hitchhikers-guide)
+- [dssg/hitchhikers-guide/.../pipelines-and-project-workflow | github](https://github.com/dssg/hitchhikers-guide/tree/master/sources/curriculum/0_before_you_start/pipelines-and-project-workflow)
+- [How to Structure a Python-Based Data Science Project (a short tutorial for beginners) | Medium](https://medium.com/swlh/how-to-structure-a-python-based-data-science-project-a-short-tutorial-for-beginners-7e00bff14f56)
+- [Pythonプロジェクトのディレクトリ構成](https://www.rhoboro.com/2018/01/25/project-directories.html)
+- [pytestのとりあえず知っておきたい使い方 | Qiita](https://qiita.com/kg1/items/4e2cae18e9bd39f014d4)
+- [Becoming a Better Data Scientist: Testing with pytest](https://changhsinlee.com/pytest-intro/)
+- [pytestの使い方と便利な機能 | Qiita](https://qiita.com/sasaki77/items/97c90ae272373d78b422)
+
+## About Datascience
+
+- [[Python] 正規表現の表記方法のまとめ（reモジュール）](https://hibiki-press.tech/learn_prog/python/regex_pattern/1099)
+- [分かりやすいpythonの正規表現の例 | Qiita](https://qiita.com/luohao0404/items/7135b2b96f9b0b196bf3)
+- [正規表現を使って、括弧の中身を取り出すコードをpythonで作成したい | teratail](https://teratail.com/questions/171096)
+- [janome.tokenizer module | Janome API reference](https://mocobeta.github.io/janome/api/janome.html#module-janome.tokenizer)
+- [Python による日本語自然言語処理](http://www.nltk.org/book-jp/ch12.html)
+- [Janomeを使って品詞の出力頻度を調べる | Qiita](https://qiita.com/shino00/items/3fc2f5c676fb5e4d1a49)
+- 「Python機械学習クックブック」―レシピ6.9：単語への重みづけ
+- [amueller/word_cloud | github](https://github.com/amueller/word_cloud)
+- [wordcloudで日本語をぼやけさせずに表示したい | teratail](https://teratail.com/questions/147091)
+- [Visualizing Text](https://www.scss.tcd.ie/~munnellg/projects/visualizing-text.html)
+- [WordCloudで凛として時雨の歌詞の傾向を可視化する | Qiita](https://qiita.com/nekoumei/items/b1afca7cfb9e54303ab4)
+- [wordcloud docs](https://amueller.github.io/word_cloud/auto_examples/frequency.html)
+- [形態素解析ツールの品詞体系](http://www.unixuser.org/~euske/doc/postag/)
+- [sklearnを使ってtf-idfの勉強した](https://komei22.hatenablog.com/entry/2019/08/27/124824)
+- [Text feature extraction | scikit-learn](https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction)
+- [Sample pipeline for text feature extraction and evaluation | scikit-learn](https://scikit-learn.org/stable/auto_examples/model_selection/grid_search_text_feature_extraction.html#sphx-glr-auto-examples-model-selection-grid-search-text-feature-extraction-py)
+- [Text corpus | Wikipedia](https://en.wikipedia.org/wiki/Text_corpus)
+- [自然言語処理における前処理の種類とその威力 | Qiita](https://qiita.com/Hironsan/items/2466fe0f344115aff177)
+- [NLP Pipeline 101 With Basic Code Example — Feature Extraction](https://medium.com/voice-tech-podcast/nlp-pipeline-101-with-basic-code-example-feature-extraction-ea9894ed8daf)
+
