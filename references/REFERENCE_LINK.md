@@ -33,4 +33,7 @@
 - [Text corpus | Wikipedia](https://en.wikipedia.org/wiki/Text_corpus)
 - [自然言語処理における前処理の種類とその威力 | Qiita](https://qiita.com/Hironsan/items/2466fe0f344115aff177)
 - [NLP Pipeline 101 With Basic Code Example — Feature Extraction](https://medium.com/voice-tech-podcast/nlp-pipeline-101-with-basic-code-example-feature-extraction-ea9894ed8daf)
+- [Wikipediaを元にした日本語の名寄せデータセットを作成しました | Sansan Builders Box](https://buildersbox.corp-sansan.com/entry/2020/03/10/110000)
+- [PythonでBQでデータ読み込み | dlg scrapbox](https://scrapbox.io/dl-guild/python%E3%81%A7BigQuery%E3%81%AB%E3%83%87%E3%83%BC%E3%82%BF%E3%82%92%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%82%80)
+- [slackAPI一覧 | dlg scrapbox](https://scrapbox.io/dl-guild/SlackAPI%E4%B8%80%E8%A6%A7)
 

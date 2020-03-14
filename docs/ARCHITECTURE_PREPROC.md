@@ -17,7 +17,7 @@
    2. 形態素解析、指定したタグの文字列のみ抽出、分かち書きなどのメソッドを提供する
 4. <font color=blue>Normalization</font> : **Text Processing**
    1. 単語の正規化処理を担当するモジュール
-   2. 文字種の統一や大文字小文字変換などを行う
+   2. 文字種の統一や大文字小文字変換などを行う([名寄せデータセット参考](https://buildersbox.corp-sansan.com/entry/2020/03/10/110000))
 5. <font color=blue>StopWordRemoval</font> : **Text Processing**
    1. ストップワード除去処理を担当するモジュール
 6. <font color=blue>ImportantWordExtraction</font> : **Feature Extraction**
@@ -27,6 +27,9 @@
    1. 文字列のベクトル化処理を担当するモジュール
    2. word2vecを用いる
    3. 文字列情報をベクトル表現に置き換えて、有用な情報の抽出及びそのサポートを行う
+8. <font color=blue>DocVectorization</font> : **Feature Extraction**
+   1. 文章のベクトル化処理を担当するモジュール
+   2. doc2vecを用いる
 
 ## 処理の流れ
 
