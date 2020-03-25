@@ -37,6 +37,7 @@
 - [Wikipediaを元にした日本語の名寄せデータセットを作成しました | Sansan Builders Box](https://buildersbox.corp-sansan.com/entry/2020/03/10/110000)
 - [PythonでBQでデータ読み込み | dlg scrapbox](https://scrapbox.io/dl-guild/python%E3%81%A7BigQuery%E3%81%AB%E3%83%87%E3%83%BC%E3%82%BF%E3%82%92%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%82%80)
 - [slackAPI一覧 | dlg scrapbox](https://scrapbox.io/dl-guild/SlackAPI%E4%B8%80%E8%A6%A7)
+- [自然言語処理（NLP）ってなんだろう？ | Qiita](https://qiita.com/MahoTakara/items/b3d719ed1a3665730826)
 
 ## About Others
 
