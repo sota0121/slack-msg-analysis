@@ -17,7 +17,7 @@
    2. 形態素解析、指定したタグの文字列のみ抽出、分かち書きなどのメソッドを提供する
 4. <font color=blue>Normalization</font> : **Text Processing**
    1. 単語の正規化処理を担当するモジュール
-   2. 文字種の統一や大文字小文字変換などを行う
+   2. 文字種の統一や大文字小文字変換などを行う([名寄せデータセット参考](https://buildersbox.corp-sansan.com/entry/2020/03/10/110000))
 5. <font color=blue>StopWordRemoval</font> : **Text Processing**
    1. ストップワード除去処理を担当するモジュール
 6. <font color=blue>ImportantWordExtraction</font> : **Feature Extraction**
@@ -27,6 +27,9 @@
    1. 文字列のベクトル化処理を担当するモジュール
    2. word2vecを用いる
    3. 文字列情報をベクトル表現に置き換えて、有用な情報の抽出及びそのサポートを行う
+8. <font color=blue>DocVectorization</font> : **Feature Extraction**
+   1. 文章のベクトル化処理を担当するモジュール
+   2. doc2vecを用いる
 
 ## 処理の流れ
 
@@ -57,3 +60,32 @@
    2. 単語の分散表現 <font color=blue>（該当モジュール：WordVectorization）</font>
 7. やりたい処理
    1. 都度調整
+
+## 処理の流れと各ディレクトリへの格納先の関連
+
+1. SlackAPIを用いたSlack情報取得ツール
+   1. script: `src/d000_utils`
+2. Slackチャンネル情報（メッセージ含む）の取得
+   1. output: `data/010_raw/`
+   2. script: `src/d010_data/`
+3. Slackユーザー情報の取得
+   1. output: `data/010_raw/`
+   2. script: `src/d010_data/`
+4. クリーニング処理
+   1. output: `data/020_intermediate/`
+   2. script: `src/d020_intermediate/`
+5. 文章の単語分割処理
+   1. output: `data/030_processed/`
+   2. script: `src/d030_processed/`
+6. 単語の正規化処理
+   1. output: `data/030_processed/`
+   2. script: `src/d030_processed/`
+7. ストップワードの除去処理
+   1. output: `data/030_processed/`
+   2. script: `src/d030_processed/`
+8. 特徴抽出ー重要単語判定
+   1. output: `data/031_features/`
+   2. script: `src/d031_features/`
+9. 特徴抽出ー単語の分散表現
+   1. output: `data/031_features/`
+   2. script: `src/d031_features/`
