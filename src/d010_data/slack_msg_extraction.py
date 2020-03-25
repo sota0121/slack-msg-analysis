@@ -1,8 +1,8 @@
 # slackapiを使って所望の情報を取得するクラス
 import sys
 import json
-sys.path.append('../../src')
-from d000_utils import slack_app as sa
+sys.path.append('../../src/d000_utils')
+import slack_app as sa
 
 
 def main():

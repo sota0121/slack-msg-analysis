@@ -11,6 +11,7 @@
 - [pytestのとりあえず知っておきたい使い方 | Qiita](https://qiita.com/kg1/items/4e2cae18e9bd39f014d4)
 - [Becoming a Better Data Scientist: Testing with pytest](https://changhsinlee.com/pytest-intro/)
 - [pytestの使い方と便利な機能 | Qiita](https://qiita.com/sasaki77/items/97c90ae272373d78b422)
+- [Pythonの正規表現モジュールreの使い方](https://note.nkmk.me/python-re-match-search-findall-etc/)
 
 ## About Datascience
 
@@ -37,3 +38,9 @@
 - [PythonでBQでデータ読み込み | dlg scrapbox](https://scrapbox.io/dl-guild/python%E3%81%A7BigQuery%E3%81%AB%E3%83%87%E3%83%BC%E3%82%BF%E3%82%92%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%82%80)
 - [slackAPI一覧 | dlg scrapbox](https://scrapbox.io/dl-guild/SlackAPI%E4%B8%80%E8%A6%A7)
 
+## About Others
+
+- [HTML特殊文字コード表](http://www.shurey.com/js/labo/character.html)
+- [忘れっぽい人のための正規表現チートシート | Qiita](https://qiita.com/tossh/items/635aea9a529b9deb3038)
+- [Quick-Start: Regex Cheat Sheet](https://www.rexegg.com/regex-quickstart.html)
+- [基本的な正規表現](https://murashun.jp/blog/20190215-01.html)
