@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+yapf = "*"
 
 [packages]
 asn1crypto = "==1.2.0"
@@ -46,6 +47,7 @@ wincertstore = "==0.2"
 wordcloud = "==1.6.0"
 Cycler = "==0.10.0"
 Janome = "==0.3.10"
+yapf = "*"
 
 [requires]
 python_version = "3.7"
