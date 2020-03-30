@@ -36,9 +36,8 @@ def extract_important_word_by_user(feature_names: list, bow_df: pd.DataFrame, ui
         # tfidfスコアで降順ソートする
         words_score_tbl = words_score_tbl.sort_values('scores', ascending=False)
         words_score_tbl = words_score_tbl.reset_index()
-        # 上位50単語を抽出(ただし、最低スコア0.1)
-        important_words = words_score_tbl.head(50)
-        important_words = important_words.query('scores > 0.01')
+        # extract : tf-idf score > 0.001
+        important_words = words_score_tbl.query('scores > 0.001')
         # 当該ユーザの辞書作成 'uid0': {'w0': 0.9, 'w1': 0.87}
         d = {}
         for i, row in important_words.iterrows():
