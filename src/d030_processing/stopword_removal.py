@@ -20,6 +20,18 @@ def maybe_download(path: str):
         print('downloading stop words definition ...')
         # Download the file from `url` and save it locally under `file_name`:
         urllib.request.urlretrieve(stopword_def_page_url, path)
+    # stop word 追加分
+    sw_added_list = [
+        '-',
+        'ー',
+        'w',
+        'W',
+        'm',
+        '笑'
+    ]
+    sw_added_str = '\n'.join(sw_added_list)
+    with open(path, 'a') as f:
+        print(sw_added_str, file=f)
 
 
 def load_sw_definition(path: str) -> list:

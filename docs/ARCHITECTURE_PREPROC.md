@@ -58,8 +58,8 @@
 6. 特徴抽出
    1. 重要単語の判定 <font color=blue>（該当モジュール：ImportantWordExtraction）</font>
    2. 単語の分散表現 <font color=blue>（該当モジュール：WordVectorization）</font>
-7. やりたい処理
-   1. 都度調整
+7. 可視化
+   1. 重要単語の可視化 <font color=blue>（該当モジュール：WordCloudVisualization）</font>
 
 ## 処理の流れと各ディレクトリへの格納先の関連
 
@@ -89,3 +89,7 @@
 9. 特徴抽出ー単語の分散表現
    1. output: `data/031_features/`
    2. script: `src/d031_features/`
+10. 可視化ー単語の重要性の可視化
+   1. output: `data/070_visualization`
+   2. script: `src/d070_visualization`
+

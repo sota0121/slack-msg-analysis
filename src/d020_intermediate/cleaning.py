@@ -24,6 +24,8 @@ def clean_msg_ser(msg_ser: pd.Series) -> pd.Series:
     cleaned_msg_list = []
     for i, msg in enumerate(msg_ser):
         cleaned_msg = clean_msg(str(msg))
+        if 'チャンネルに参加しました' in cleaned_msg:
+            continue
         cleaned_msg_list.append(cleaned_msg)
     cleaned_msg_ser = pd.Series(cleaned_msg_list)
     return cleaned_msg_ser
