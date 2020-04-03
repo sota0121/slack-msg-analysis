@@ -12,6 +12,7 @@
 - [Becoming a Better Data Scientist: Testing with pytest](https://changhsinlee.com/pytest-intro/)
 - [pytestの使い方と便利な機能 | Qiita](https://qiita.com/sasaki77/items/97c90ae272373d78b422)
 - [Pythonの正規表現モジュールreの使い方](https://note.nkmk.me/python-re-match-search-findall-etc/)
+- [Dockerでデータ分析環境を作ってみる](https://www.fabrica-com.co.jp/techblog/technology/994/)
 
 ## About Datascience
 
@@ -45,3 +46,4 @@
 - [忘れっぽい人のための正規表現チートシート | Qiita](https://qiita.com/tossh/items/635aea9a529b9deb3038)
 - [Quick-Start: Regex Cheat Sheet](https://www.rexegg.com/regex-quickstart.html)
 - [基本的な正規表現](https://murashun.jp/blog/20190215-01.html)
+- [/bin/bash^M: bad interpreter: そのようなファイルやディレクトリはありません (No such file or directory)](http://totech.hateblo.jp/entry/2014/03/19/174129)
