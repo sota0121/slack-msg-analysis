@@ -1,5 +1,35 @@
 # ユーザー検索プロジェクト
 
+## Getting started
+
+save credentials as `./conf/local/credentials.json`
+
+```json:credentials.json
+{
+    "channel_api_key": "SLACK_API_CHANNEL_KEY",
+    "user_api_key": "SLACK_API_USER_KEY"
+}
+```
+
+build image and run container
+
+```bash
+$ docker-compose up -d --build
+$ docker container ls
+# CONTAINER ID        IMAGE                        COMMAND             CREATED             STATUS              PORTS                    NAMES
+# XXXXXXXXXXXX        slack-msg-analysis_python3   "/bin/bash"         6 seconds ago       Up 6 seconds        0.0.0.0:8888->8000/tcp   ds-py3
+```
+
+execute docker container
+
+```bash
+# execute bash
+$ docker exec -it ds-py3 bash
+# execute jupyter
+$ docker exec -it ds-py3 jupyter notebook
+# and access localhost:8888
+```
+
 ## 目的
 
 - slackの投稿メッセージをユーザーごとに分析
