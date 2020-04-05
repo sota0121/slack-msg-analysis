@@ -6,6 +6,8 @@
 import pandas as pd
 import json
 from pathlib import Path
+import argparse
+import sys
 from tqdm import tqdm
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -45,17 +47,17 @@ def extract_important_word_by_user(feature_names: list, bow_df: pd.DataFrame, ui
         dict_important_words_by_user[uid] = d
     return dict_important_words_by_user
 
-def main():
-    input_root = '../../data/030_processed'
-    output_root = '../../data/031_features'
+def extraction_by_user(input_root: str, output_root: str) -> dict:
     # ---------------------------------------------
     # 1. load messages (processed)
     # ---------------------------------------------
-    msg_fpath = input_root + '/' + 'messages_wkt_norm_swremoved.csv'
+    msg_fpath = input_root + '/' + 'messages_cleaned_wakati_norm_rmsw.csv'
+    print('load: {0}'.format(msg_fpath))
     df_msgs = pd.read_csv(msg_fpath)
     # ---------------------------------------------
     # 2. group messages by user
     # ---------------------------------------------
+    print('group messages by user and save it.')
     msgs_grouped_by_user = groupe_msgs_by_user(df_msgs)
     msg_grouped_fpath = input_root + '/' + 'messages_grouped_by_user.json'
     with open(msg_grouped_fpath, 'w', encoding='utf-8') as f:
@@ -63,6 +65,7 @@ def main():
     # ---------------------------------------------
     # 4. 全文書を対象にtf-idf計算
     # ---------------------------------------------
+    print('tfidf vectorizing ...')
     # > 全文書にある単語がカラムで、文書数（=user）が行となる行列が作られる。各要素にはtf-idf値がある
     tfidf_vectorizer = TfidfVectorizer(token_pattern=u'(?u)\\b\\w+\\b')
 
@@ -74,6 +77,7 @@ def main():
     # ---------------------------------------------
     # 5. tf-idfに基づいて重要単語を抽出する
     # ---------------------------------------------
+    print('extract important words ...')
     d_word_score_by_uid = extract_important_word_by_user(tfidf_vectorizer.get_feature_names(), bow_df, msgs_grouped_by_user.keys())
     # # test output
     # with open(output_root + '/' + 'important_words_tfidf.json', 'w', encoding='utf-8') as f:
@@ -82,6 +86,7 @@ def main():
     # ---------------------------------------------
     # 6. uid => uname 変換
     # ---------------------------------------------
+    print('ユーザーごとの重要単語群のキーをuidからunameに変換 ...')
     user_tbl = pd.read_csv('../../data/020_intermediate/users.csv')
     d_word_score_by_uname = {}
     for uid, val in d_word_score_by_uid.items():
@@ -93,12 +98,45 @@ def main():
             continue
         print('uname: ', uname, 'type of uname: ', type(uname))
         d_word_score_by_uname[uname] = val
-    # ---------------------------------------------
-    # 7. userごとに抽出した単語群を出力する
-    # ---------------------------------------------
+    return d_word_score_by_uname
+
+def extraction_of_lastterm(input_root: str, output_root: str) -> dict:
+    return {}
+
+def main(mode: int, term: str):
+    input_root = '../../data/030_processed'
+    output_root = '../../data/031_features'
+    # =======================
+    # MAIN PROCESS
+    # =======================
+    dic_words_and_score = {}
+    if mode == 0:
+        print('extract important words with tfidf by user.')
+        dic_words_and_score = extraction_by_user(input_root, output_root)
+    else:
+        print('extract important words with tfidf of last term vs all history.')
+        dic_words_and_score = extraction_of_lastterm(input_root, output_root)
+
+    # =======================
+    # OUTPUT
+    # =======================
     with open(output_root + '/' + 'important_words_tfidf.json', 'w', encoding='utf-8') as f:
-        json.dump(d_word_score_by_uname, f, ensure_ascii=False, indent=4)
+        json.dump(dic_words_and_score, f, ensure_ascii=False, indent=4)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("mode", help="0: tfidf by user, 1: tfidf of last term vs all history", type=int)
+    parser.add_argument("--term", help="lw: tfidf of last week, lm: tfidf of last month", type=str)
+    args = parser.parse_args()
+    # get arguments
+    mode = args.mode
+    if (mode != 0) and (mode != 1):
+        print('invalid args mode. please exe with -h option')
+        sys.exit(1)
+    term = args.term
+    if mode == 1:
+        if (term != 'lw') and (term != 'lm'):
+            print('invalid args --term. please exe with -h option')
+            sys.exit(1)
+    main(mode, term)
