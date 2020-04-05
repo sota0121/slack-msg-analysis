@@ -6,6 +6,8 @@
 # - mention (<@XXXXXX>) : regex >> "(<)@.+\w(>)"
 import re
 import pandas as pd
+import argparse
+from pathlib import Path
 
 
 def clean_msg(msg: str) -> str:
@@ -31,19 +33,24 @@ def clean_msg_ser(msg_ser: pd.Series) -> pd.Series:
     return cleaned_msg_ser
 
 
-def main():
+def main(input_fname: str):
     input_root = '../../data/020_intermediate'
     output_root = input_root
     # 1. load messages.csv (including noise)
-    msgs_fpath = input_root + '/' + 'messages.csv'
+    msgs_fpath = input_root + '/' + input_fname
     df_msgs = pd.read_csv(msgs_fpath)
     # 2. clean message string list
     ser_msg = df_msgs.msg
     df_msgs.msg = clean_msg_ser(ser_msg)
     # 3. save it
-    msgs_cleaned_fpath = output_root + '/' + 'messages_cleaned.csv'
+    pin = Path(msgs_fpath)
+    msgs_cleaned_fpath = output_root + '/' + pin.stem + '_cleaned.csv'
     df_msgs.to_csv(msgs_cleaned_fpath, index=False)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input_fname", help="set input file name", type=str)
+    args = parser.parse_args()
+    input_fname = args.input_fname
+    main(input_fname)
