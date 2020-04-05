@@ -47,3 +47,4 @@
 - [Quick-Start: Regex Cheat Sheet](https://www.rexegg.com/regex-quickstart.html)
 - [基本的な正規表現](https://murashun.jp/blog/20190215-01.html)
 - [/bin/bash^M: bad interpreter: そのようなファイルやディレクトリはありません (No such file or directory)](http://totech.hateblo.jp/entry/2014/03/19/174129)
+- [Slack API で特定チャンネルの一定期間以上前のメッセージを削除する](https://michimani.net/post/programming-delete-old-slack-messages/)
