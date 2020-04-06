@@ -42,16 +42,36 @@ def clean_msg_ser(msg_ser: pd.Series) -> pd.Series:
     return cleaned_msg_ser
 
 
+def get_ch_id_from_table(ch_name_parts: list, input_fpath: str) -> list:
+    df_ch = pd.read_csv(input_fpath)
+    ch_id = []
+    for ch_name_part in ch_name_parts:
+        for i, row in df_ch.iterrows():
+            if ch_name_part in row.ch_name:
+                ch_id.append(row.ch_id)
+                break
+    return ch_id
+
+
 def main(input_fname: str):
     input_root = '../../data/020_intermediate'
     output_root = input_root
     # 1. load messages.csv (including noise)
     msgs_fpath = input_root + '/' + input_fname
     df_msgs = pd.read_csv(msgs_fpath)
-    # 2. clean message string list
+    print('load :{0}'.format(msgs_fpath))
+    # 2. Drop Not Target Records
+    print('drop records (drop non-target channel\'s messages)')
+    non_target_ch_name = ['general', '運営からのアナウンス']
+    non_target_ch_ids = get_ch_id_from_table(non_target_ch_name, input_root + '/' + 'channels.csv')
+    print('=== non target channels bellow ====')
+    print(non_target_ch_ids)
+    for non_target_ch_id in non_target_ch_ids:
+        df_msgs = df_msgs.query('ch_id != @non_target_ch_id')
+    # 3. clean message string list
     ser_msg = df_msgs.msg
     df_msgs.msg = clean_msg_ser(ser_msg)
-    # 3. save it
+    # 4. save it
     pin = Path(msgs_fpath)
     msgs_cleaned_fpath = output_root + '/' + pin.stem + '_cleaned.csv'
     df_msgs.to_csv(msgs_cleaned_fpath, index=False)
