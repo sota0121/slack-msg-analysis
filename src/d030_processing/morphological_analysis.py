@@ -7,6 +7,9 @@
 from janome.tokenizer import Tokenizer
 from tqdm import tqdm
 import pandas as pd
+import argparse
+from pathlib import Path
+import sys
 
 
 exc_part_of_speech = {
@@ -76,19 +79,29 @@ def make_wakati_for_lines(msg_ser: pd.Series) -> pd.Series:
     return wakati_msg_ser
 
 
-def main():
+def main(input_fname: str):
     input_root = '../../data/020_intermediate'
     output_root = '../../data/030_processed'
     # 1. load messages_cleaned.csv
-    msgs_cleaned_fpath = input_root + '/' + 'messages_cleaned.csv'
+    msgs_cleaned_fpath = input_root + '/' + input_fname
     df_msgs = pd.read_csv(msgs_cleaned_fpath)
     # 2. make wakati string by record
     ser_msg = df_msgs.msg
     df_msgs['wakati_msg'] = make_wakati_for_lines(ser_msg)
     # 3. save it
-    msgs_wakati_fpath = output_root + '/' + 'messages_wakati.csv'
+    pin = Path(msgs_cleaned_fpath)
+    msgs_wakati_fpath = output_root + '/' + pin.stem + '_wakati.csv'
     df_msgs.to_csv(msgs_wakati_fpath, index=False)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input_fname", help="set input file name", type=str)
+    args = parser.parse_args()
+    input_fname = args.input_fname
+    # input file must been cleaned
+    if 'cleaned' not in input_fname:
+        print('input file name is invalid.: {0}'.format(input_fname))
+        print('input file name must include \'cleaned\'')
+        sys.exit(1)
+    main(input_fname)

@@ -9,6 +9,9 @@ import pandas as pd
 import urllib.request
 from pathlib import Path
 from tqdm import tqdm
+import argparse
+from pathlib import Path
+import sys
 
 
 def maybe_download(path: str):
@@ -58,7 +61,7 @@ def remove_sw_from_msgs(wktmsg_ser: pd.Series, stopwords: list) -> pd.Series:
     return swremved_msg_ser
 
 
-def main():
+def main(input_fname: str):
     input_root = '../../data/030_processed'
     output_root = input_root
     # 1. load stop words
@@ -66,15 +69,25 @@ def main():
     maybe_download(sw_def_fpath)
     stopwords = load_sw_definition(sw_def_fpath)
     # 2. load messages
-    msgs_fpath = input_root + '/' + 'messages_wkt_norm.csv'
+    msgs_fpath = input_root + '/' + input_fname
     df_msgs = pd.read_csv(msgs_fpath)
     # 3. remove stop words
     ser_msg = df_msgs.wakati_msg
     df_msgs.wakati_msg = remove_sw_from_msgs(ser_msg, stopwords)
     # 4. save it
-    msgs_ofpath = output_root + '/' + 'messages_wkt_norm_swremoved.csv'
+    pin = Path(msgs_fpath)
+    msgs_ofpath = output_root + '/' + pin.stem + '_rmsw.csv'
     df_msgs.to_csv(msgs_ofpath, index=False)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input_fname", help="set input file name", type=str)
+    args = parser.parse_args()
+    input_fname = args.input_fname
+    # input file must been cleaned
+    if 'norm' not in input_fname:
+        print('input file name is invalid.: {0}'.format(input_fname))
+        print('input file name must include \'norm\'')
+        sys.exit(1)
+    main(input_fname)

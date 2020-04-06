@@ -5,11 +5,13 @@ from pathlib import Path
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
 from tqdm import tqdm
+import sys
+import argparse
 
 
-def main():
+def main(input_fname: str):
     input_root = '../../data/031_features'
-    output_root = './wordcloud'
+    output_root = './wordcloud_by_user' if 'by_user' in input_fname else './wordcloud_by_term'
     p = Path(output_root)
     if p.exists() is False:
         p.mkdir()
@@ -17,7 +19,7 @@ def main():
     # 1. load tf-idf score dictionary
     # -------------------------------------
     d_word_score_by_user = {}
-    tfidf_fpath = input_root + '/' + 'important_words_tfidf.json'
+    tfidf_fpath = input_root + '/' + input_fname
     with open(tfidf_fpath, 'r', encoding='utf-8') as f:
         d_word_score_by_user = json.load(f)
     # -------------------------------------
@@ -40,4 +42,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input_fname", help="set input file name", type=str)
+    args = parser.parse_args()
+    input_fname = args.input_fname
+    main(input_fname)
