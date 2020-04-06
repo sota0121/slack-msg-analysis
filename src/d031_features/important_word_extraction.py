@@ -14,7 +14,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 JST = timezone(timedelta(hours=+9), 'JST')
 
 
-def groupe_msgs_by_user(df_msgs: pd.DataFrame) -> dict:
+def group_msgs_by_user(df_msgs: pd.DataFrame) -> dict:
     ser_uid = df_msgs.uid
     ser_wktmsg = df_msgs.wakati_msg
     # 重複なしのuid一覧を取得
@@ -28,22 +28,41 @@ def groupe_msgs_by_user(df_msgs: pd.DataFrame) -> dict:
         dict_msgs_by_user[uid] = ' '.join(extracted.wakati_msg.dropna().values.tolist())        
     return dict_msgs_by_user
 
-def split_lastterm_other_records(df_all: pd.DataFrame, term: str) -> pd.DataFrame:
+
+def group_msgs_by_term(df_msgs: pd.DataFrame, term: str) -> dict:
     # set term
     term_days = 8
     if term == 'lm':
         term_days = 31
-    print('set term limit : {0} days'.format(term_days))
-    
-    # 3. extract
+    print('group messages every {0} days'.format(term_days))
+    # analyze timestamp
     now_in_sec = (datetime.now(JST) - datetime.fromtimestamp(0, JST)).total_seconds()
-    recent_days = timedelta(days=term_days)
-    recent_seconds = recent_days.total_seconds()
-    print('extract messages last {0} days ...'.format(term_days))
-    df_last = df_all.query('@now_in_sec - timestamp < @recent_seconds')
-    df_other = df_all.query('@now_in_sec - timestamp >= @recent_seconds')
-    return df_last, df_other
-
+    interval_days = timedelta(days=term_days)
+    interval_seconds = interval_days.total_seconds()
+    oldest_timestamp = df_msgs.min().timestamp
+    oldest_ts_in_sec = (datetime.fromtimestamp(oldest_timestamp, JST) - datetime.fromtimestamp(0, JST)).total_seconds()
+    loop_num = (abs(now_in_sec - oldest_ts_in_sec) / interval_seconds) + 1
+    # extract by term
+    dict_msgs_by_term = {}
+    df_tmp = df_msgs
+    now_tmp = now_in_sec
+    for i in range(int(loop_num)):
+        # make current term string
+        cur_term_s = 'term_ago_{0}'.format(str(i).zfill(3))
+        print(cur_term_s)
+        # current messages
+        df_msgs_cur = df_tmp.query('@now_tmp - timestamp < @interval_seconds')
+        df_msgs_other = df_tmp.query('@now_tmp - timestamp >= @interval_seconds')
+        # messages does not exist. break.
+        if df_msgs_cur.shape[0] == 0:
+            break
+        # add current messages to dict
+        dict_msgs_by_term[cur_term_s] = ' '.join(df_msgs_cur.wakati_msg.dropna().values.tolist())
+        # update temp value for next loop
+        now_tmp = now_tmp - interval_seconds
+        df_tmp = df_msgs_other
+    return dict_msgs_by_term
+    
 
 def extract_important_word_by_key(feature_names: list, bow_df: pd.DataFrame, uids: list) -> dict:
     # > 行ごと、つまりユーザーごとにみていき、重要単語を抽出する(tfidf上位X個の単語)
@@ -78,7 +97,7 @@ def extraction_by_user(input_root: str, output_root: str) -> dict:
     # 2. group messages by user
     # ---------------------------------------------
     print('group messages by user and save it.')
-    msgs_grouped_by_user = groupe_msgs_by_user(df_msgs)
+    msgs_grouped_by_user = group_msgs_by_user(df_msgs)
     msg_grouped_fpath = input_root + '/' + 'messages_grouped_by_user.json'
     with open(msg_grouped_fpath, 'w', encoding='utf-8') as f:
         json.dump(msgs_grouped_by_user, f, ensure_ascii=False, indent=4)
@@ -120,7 +139,8 @@ def extraction_by_user(input_root: str, output_root: str) -> dict:
         d_word_score_by_uname[uname] = val
     return d_word_score_by_uname
 
-def extraction_of_lastterm(input_root: str, output_root: str, term: str) -> dict:
+
+def extraction_by_term(input_root: str, output_root: str, term: str) -> dict:
     # ---------------------------------------------
     # 1. load messages (processed)
     # ---------------------------------------------
@@ -128,17 +148,13 @@ def extraction_of_lastterm(input_root: str, output_root: str, term: str) -> dict
     msg_fpath = input_root + '/' + 'messages_cleaned_wakati_norm_rmsw.csv'
     df_msgs_all = pd.read_csv(msg_fpath)
     # ---------------------------------------------
-    # 2. split last term and other messages, and save it as dict
+    # 2. group messages by term
     # ---------------------------------------------
-    df_msgs_last, df_msgs_other = split_lastterm_other_records(df_msgs_all, term)
-    # save it
-    term_s = 'lastweek' if 'lw' == term else 'lastmonth'
-    dict_msgs_last_other = {}
-    dict_msgs_last_other[term_s] = ' '.join(df_msgs_last.wakati_msg.dropna().values.tolist())
-    dict_msgs_last_other['other'] = ' '.join(df_msgs_other.wakati_msg.dropna().values.tolist())
-    msg_grouped_fpath = input_root + '/' + 'messages_lastterm_other.json'
+    print('group messages by term and save it.')
+    msgs_grouped_by_term = group_msgs_by_term(df_msgs_all, term)
+    msg_grouped_fpath = input_root + '/' + 'messages_grouped_by_term.json'
     with open(msg_grouped_fpath, 'w', encoding='utf-8') as f:
-        json.dump(dict_msgs_last_other, f, ensure_ascii=False, indent=4)
+        json.dump(msgs_grouped_by_term, f, ensure_ascii=False, indent=4)
     # ---------------------------------------------
     # 3. 全文書を対象にtf-idf計算
     # ---------------------------------------------
@@ -146,16 +162,18 @@ def extraction_of_lastterm(input_root: str, output_root: str, term: str) -> dict
     # > 全文書にある単語がカラムで、文書数（=user）が行となる行列が作られる。各要素にはtf-idf値がある
     tfidf_vectorizer = TfidfVectorizer(token_pattern=u'(?u)\\b\\w+\\b')
 
-    bow_vec = tfidf_vectorizer.fit_transform(dict_msgs_last_other.values())
+    bow_vec = tfidf_vectorizer.fit_transform(msgs_grouped_by_term.values())
     bow_array = bow_vec.toarray()
     bow_df = pd.DataFrame(bow_array,
-                        index=dict_msgs_last_other.keys(),
+                        index=msgs_grouped_by_term.keys(),
                         columns=tfidf_vectorizer.get_feature_names())
     # ---------------------------------------------
     # 5. tf-idfに基づいて重要単語を抽出する
     # ---------------------------------------------
     print('extract important words ...')
-    dict_word_score_by_term = extract_important_word_by_key(tfidf_vectorizer.get_feature_names(), bow_df, [term_s, 'other'])
+    dict_word_score_by_term = extract_important_word_by_key(
+        tfidf_vectorizer.get_feature_names(),
+        bow_df, msgs_grouped_by_term.keys())
     return dict_word_score_by_term
 
 
@@ -171,7 +189,7 @@ def main(mode: int, term: str):
         dic_words_and_score = extraction_by_user(input_root, output_root)
     else:
         print('extract important words with tfidf of last term vs all history.')
-        dic_words_and_score = extraction_of_lastterm(input_root, output_root, term)
+        dic_words_and_score = extraction_by_term(input_root, output_root, term)
 
     # =======================
     # OUTPUT

@@ -48,3 +48,5 @@
 - [基本的な正規表現](https://murashun.jp/blog/20190215-01.html)
 - [/bin/bash^M: bad interpreter: そのようなファイルやディレクトリはありません (No such file or directory)](http://totech.hateblo.jp/entry/2014/03/19/174129)
 - [Slack API で特定チャンネルの一定期間以上前のメッセージを削除する](https://michimani.net/post/programming-delete-old-slack-messages/)
+- [FFmpegで複数の画像からGIFを作る方法](https://kenyu-life.com/2019/02/13/ffmpeg/)
+- [FFmpegで動画をGIFに変換 | Qiita](https://qiita.com/wMETAw/items/fdb754022aec1da88e6e)
