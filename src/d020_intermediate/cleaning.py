@@ -1,9 +1,12 @@
 # Text Processing : Cleaning text noise
 # 現段階のクリーニング対象
+# - Return and Space : regex >> "\s"
 # - url link (<https://...>): regex >> "(<)http.+(>)"
 # - reaction (:grin:) : regex >> "(:).+\w(:)"
 # - html kw (&lt;, 	&gt;, &amp;, &nbsp;, &ensp;, &emsp;, &ndash;, &mdash;) : regex >> "(&).+?\w(;)"
 # - mention (<@XXXXXX>) : regex >> "(<)@.+\w(>)"
+# - inline code block : regex >> "(`).+(`)"
+# - multi lines code block : regex >> "(```).+(```)"
 import re
 import pandas as pd
 import argparse
@@ -11,14 +14,20 @@ from pathlib import Path
 
 
 def clean_msg(msg: str) -> str:
+    # sub 'Return and Space'
+    result = re.sub(r'\s', '', msg)
     # sub 'url link'
-    result = re.sub(r'(<)http.+(>)', '', msg)
+    result = re.sub(r'(<)http.+(>)', '', result)
     # sub 'mention'
     result = re.sub(r'(<)@.+\w(>)', '', result)
     # sub 'reaction'
     result = re.sub(r'(:).+\w(:)', '', result)
     # sub 'html key words'
     result = re.sub(r'(&).+?\w(;)', '', result)
+    # sub 'multi lines code block'
+    result = re.sub(r'(```).+(```)', '', result)
+    # sub 'inline code block'
+    result = re.sub(r'(`).+(`)', '', result)
     return result
 
 
