@@ -62,7 +62,9 @@ def extract_important_word_by_key(feature_names: list, bow_df: pd.DataFrame, uid
         d = {}
         for i, row in important_words.iterrows():
             d[row.words] = row.scores
-        dict_important_words_by_user[uid] = d
+        # 当該ユーザの辞書にワードが少なくとも一つ以上ある場合のみテーブルに追加
+        if len(d.keys()) > 0:
+            dict_important_words_by_user[uid] = d
     return dict_important_words_by_user
 
 def extraction_by_user(input_root: str, output_root: str) -> dict:
